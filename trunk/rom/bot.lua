@@ -1,5 +1,39 @@
 BOT_VERSION = 3.29;
 
+
+
+cprintf(cli.red, "\a" .. [[[WARNING] This repository has deprecated!
+Please update your repo URL to https://github.com/elverion/rom-bot/trunk
+See https://solarstrike.net for more information.
+
+"]]);
+local totalTimeWait = 5;
+local secondsLeft = totalTimeWait;
+local _startTime = getTime();
+
+keyboardRelease(key.VK_ENTER);
+keyboardBufferClear();
+while(secondsLeft > 0) do
+	local delta = deltaTime(getTime(), _startTime);
+	local newSecondsLeft = totalTimeWait - math.ceil(delta / 1000);
+	if( newSecondsLeft ~= secondsLeft ) then
+		secondsLeft = newSecondsLeft;
+		printf("\rAutomatically continuing in %s seconds... [ENTER] = skip, [SPACE] = more info", secondsLeft);
+	end
+
+	if( keyPressedLocal(key.VK_ENTER) ) then
+		secondsLeft = 0;
+	end
+
+	if( keyPressedLocal(key.VK_SPACE) ) then
+		system("START https://solarstrike.net");
+		secondsLeft = 0;
+	end
+
+	yrest(100);
+end
+printf("\n\n");
+
 local handle = io.popen("SubWCRev \""..getExecutionPath().."\"")
 local result = handle:read("*a")
 handle:close()
